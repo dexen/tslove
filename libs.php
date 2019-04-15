@@ -150,6 +150,7 @@ subjectAltName = @alt_names
 
 [alt_names]
 DNS.1 = $config[domain]
+DNS.2 = www.$config[domain]
 
 EOS
 	);
