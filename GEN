@@ -4,10 +4,17 @@
 ini_set('error_reporting', E_ALL);
 ini_set('display_errors', true);
 
-$data = [
-	'ca_cert_file' =>
+require './libs.php';
+
+$config = [
+	'ca_cert_file' => 'placeholder.pem',
 	'domain' => 'example.local',
 	'key_file' => 'example.local.key',
 ];
 
-echo 'ALL DONE.', PHP_EOL;
+$v = readline(sprintf('Generate for "%s"? [y] ', $config['domain']));
+if (($v === 'y') || ($v === '')) {
+	generate_cert_files($config);
+	echo 'ALL DONE.', PHP_EOL; }
+else
+	echo 'Cancelled.', PHP_EOL;
