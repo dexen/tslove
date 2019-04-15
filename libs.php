@@ -28,14 +28,16 @@ function prepare_dir_ca_files(array $config) : array
 		bail_files_exist(['ca_key_file', 'ca_cert_file'], $config) );
 }
 
-function propose_config_file() : array
+function propose_config_file(array $config) : array
 {
-	return [
-		'master_config_file' => 'master.cnf',
-		'ca_cert_cnf_file' => sprintf('CA/%s-%s-CA.pem.cnf',
-			get_current_user(),
-			gethostname() ),
-	];
+	return array_merge(
+		$config,
+		[
+			'master_config_file' => 'master.cnf',
+			'ca_cert_cnf_file' => sprintf('CA/%s-%s-CA.pem.cnf',
+				get_current_user(),
+				gethostname() ),
+		] );
 }
 
 function propose_ca_files(array $config) : array

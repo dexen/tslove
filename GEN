@@ -6,7 +6,7 @@ ini_set('display_errors', true);
 
 require './libs.php';
 
-$config = ensure_has_ca(prepare_dir_cert_files(propose_cert_files(prompt_domain())));
+$config = ensure_has_ca(prepare_dir_cert_files(propose_cert_files(propose_config_file(prompt_domain($argv)))));
 
 $v = readline(sprintf('Generate for "%s"? [y] ', $config['domain']));
 if (($v === 'y') || ($v === '')) {
