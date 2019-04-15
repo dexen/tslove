@@ -6,7 +6,7 @@ ini_set('display_errors', true);
 
 require './libs.php';
 
-$config = prepare_ca_cert_cnf_file(prepare_dir_ca_files(propose_ca_files(propose_config_file())));
+$config = prepare_ca_cert_cnf_file(prepare_dir_ca_files(propose_ca_files(propose_config_file([]))));
 
 var_dump($config);
 
