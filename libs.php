@@ -21,4 +21,12 @@ function propose_ca_files() : array
 
 function generate_ca_files(array $config)
 {
+	system(
+		sprintf('openssl genrsa -out %s 4096',
+			escapeshellcmd($config['ca_key_file']) ) );
+
+	system(
+		sprintf('openssl req -x509 -new -nodes -key %s -sha256 -days 1024 -out %s',
+			escapeshellcmd($config['ca_key_file']),
+			escapeshellcmd($config['ca_cert_file']) ) );
 }
