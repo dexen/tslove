@@ -78,7 +78,7 @@ function generate_ca_files(array $config)
 function prepare_dir_cert_files(array $config) : array
 {
 	return prepare_dir_out_files($config,
-		bail_files_exist([ 'csr_file', 'conf_file', 'ext_file', 'cert_file', 'key_file' ], $config));
+		bail_files_exist([ 'csr_file', 'csr_cnf_file', 'ext_file', 'cert_file', 'key_file' ], $config));
 }
 
 function propose_cert_files(array $config) : array
@@ -88,7 +88,7 @@ function propose_cert_files(array $config) : array
 		propose_ca_files($config),
 		[
 			'csr_file' => 'domains/' .$config['domain'] .'.csr',
-			'conf_file' => 'domains/' .$config['domain'] .'.csr.cnf',
+			'csr_cnf_file' => 'domains/' .$config['domain'] .'.csr.cnf',
 			'ext_file' => 'domains/' .$config['domain'] .'.v3.ext',
 			'cert_file' => 'domains/' .$config['domain'] .'.pem',
 			'key_file' => 'domains/' .$config['domain'] .'.key',
@@ -97,15 +97,15 @@ function propose_cert_files(array $config) : array
 	return $config;
 }
 
-function prompt_domain() : array
+function prompt_domain($argv) : array
 {
-	$like = 'example.' .gethostname();
+	if (count($argv) === 2)
+		$domain = $argv[1];
+	else {
+		$like = 'example.' .gethostname();
+		$domain = readline(sprintf('Local dev domain name (like "%s") ', $like)); }
 
-	$config = [
-		'domain' => readline(sprintf('Local dev domain name (like "%s") ', $like)),
-	];
-
-	return $config;
+	return compact('domain');
 }
 
 function prepare_ca_cert_cnf_file(array $config) : array
@@ -130,4 +130,34 @@ function ensure_has_ca(array $config) : array
 			throw new RuntimeException(sprintf('CA file "%s" does not exists, run GEN_CA', $config[$k]));
 
 	return $config;
+}
+
+function prepare_config_files(array $config) : array
+{
+	file_put_contents(
+		$config['csr_cnf_file'],
+		file_get_contents($config['master_config_file'])
+		.'CN=' .$config['domain']
+		.PHP_EOL );
+
+	file_put_contents(
+		$config['ext_file'],
+		<<<EOS
+authorityKeyIdentifier=keyid,issuer
+basicConstraints=CA:FALSE
+keyUsage = digitalSignature, nonRepudiation, keyEncipherment, dataEncipherment
+subjectAltName = @alt_names
+
+[alt_names]
+DNS.1 = $config[domain]
+
+EOS
+	);
+
+	return $config;
+}
+
+function generate_cert_files(array $config)
+{
+	prepare_config_files($config);
 }
