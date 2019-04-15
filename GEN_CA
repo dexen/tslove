@@ -1,0 +1,21 @@
+#!/usr/bin/env php
+<?php
+
+ini_set('error_reporting', E_ALL);
+ini_set('display_errors', true);
+
+require './libs.php';
+
+$config = [
+	'ca_key_file' => 'placeholder-CA.key',
+	'ca_cert_file' => 'placeholder-CA.pem',
+];
+
+var_dump($config);
+
+$v = readline('Generate? [y] ');
+if (($v === 'y') || ($v === '')) {
+	generate_ca_files($config);
+	echo 'ALL DONE.', PHP_EOL; }
+else
+	echo 'Cancelled.', PHP_EOL;
