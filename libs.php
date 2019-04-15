@@ -118,7 +118,15 @@ function prepare_ca_cert_cnf_file(array $config) : array
 
 	file_put_contents(
 		$config['ca_cert_cnf_file'],
-		file_get_contents($config['master_config_file'])
+		file_get_contents($config['master_config_file']) .PHP_EOL
+			.'[req]' .PHP_EOL
+			.'x509_extensions     = v3_ca' .PHP_EOL .PHP_EOL
+			.'[v3_ca]' .PHP_EOL
+.'subjectKeyIdentifier = hash
+authorityKeyIdentifier = keyid:always,issuer
+basicConstraints = critical, CA:true
+keyUsage = critical, digitalSignature, cRLSign, keyCertSign'
+
 #			.'DN=Local dev CA'
 #			.PHP_EOL
 		);
