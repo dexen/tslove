@@ -160,4 +160,18 @@ EOS
 function generate_cert_files(array $config)
 {
 	prepare_config_files($config);
+
+	system(
+		sprintf('openssl req -new -sha256 -nodes -out %s -newkey rsa:4096 -keyout %s -config %s',
+			escapeshellarg($config['csr_file']),
+			escapeshellarg($config['key_file']),
+			escapeshellarg($config['csr_cnf_file']) ) );
+
+	system(
+		sprintf('openssl x509 -req -in %s -CA %s -CAkey %s -CAcreateserial -out %s -days 500 -sha256 -extfile %s',
+			escapeshellarg($config['csr_file']),
+			escapeshellarg($config['ca_cert_file']),
+			escapeshellarg($config['ca_key_file']),
+			escapeshellarg($config['cert_file']),
+			escapeshellarg($config['ext_file']) ) );
 }
