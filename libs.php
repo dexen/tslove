@@ -83,7 +83,7 @@ function propose_cert_files(array $config) : array
 {
 	$config = array_merge(
 		$config,
-		propose_ca_files(),
+		propose_ca_files($config),
 		[
 			'csr_file' => 'domains/' .$config['domain'] .'.csr',
 			'conf_file' => 'domains/' .$config['domain'] .'.csr.cnf',
