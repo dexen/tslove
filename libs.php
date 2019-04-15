@@ -120,3 +120,12 @@ function prepare_ca_cert_cnf_file(array $config) : array
 
 	return $config;
 }
+
+function ensure_has_ca(array $config) : array
+{
+	foreach (['ca_key_file', 'ca_cert_file'] as $k)
+		if (!file_exists($config[$k]))
+			throw new RuntimeException(sprintf('CA file "%s" does not exists, run GEN_CA', $config[$k]));
+
+	return $config;
+}
