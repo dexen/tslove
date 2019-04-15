@@ -66,9 +66,10 @@ function generate_ca_files(array $config)
 			escapeshellcmd($config['ca_key_file']) ) );
 
 	system(
-		sprintf('openssl req -x509 -new -nodes -key %s -sha256 -days 1024 -out %s',
+		sprintf('openssl req -x509 -new -nodes -key %s -sha256 -days 1024 -out %s -config %s',
 			escapeshellarg($config['ca_key_file']),
-			escapeshellarg($config['ca_cert_file']) ) );
+			escapeshellarg($config['ca_cert_file']),
+			escapeshellarg($config['ca_cert_cnf_file']) ) );
 }
 
 
@@ -101,6 +102,21 @@ function prompt_domain() : array
 	$config = [
 		'domain' => readline(sprintf('Local dev domain name (like "%s") ', $like)),
 	];
+
+	return $config;
+}
+
+function prepare_ca_cert_cnf_file(array $config) : array
+{
+	if (!file_exists($config['master_config_file']))
+		throw new RuntimeException(sprintf('Master config file "%s" does not exist, run GEN_CONFIG', $config['master_config_file']));
+
+	file_put_contents(
+		$config['ca_cert_cnf_file'],
+		file_get_contents($config['master_config_file'])
+#			.'DN=Local dev CA'
+#			.PHP_EOL
+		);
 
 	return $config;
 }

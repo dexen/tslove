@@ -6,12 +6,9 @@ ini_set('display_errors', true);
 
 require './libs.php';
 
-$config = prepare_dir_ca_files(propose_ca_files(propose_config_file()));
+$config = prepare_ca_cert_cnf_file(prepare_dir_ca_files(propose_ca_files(propose_config_file())));
 
 var_dump($config);
-
-if (!file_exists($config['master_config_file']))
-	throw new RuntimeException(sprintf('Master config file "%s" does not exist, run GEN_CONFIG', $config['master_config_file']));
 
 $v = readline('Generate? [y] ');
 if (($v === 'y') || ($v === '')) {
