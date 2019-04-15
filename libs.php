@@ -19,7 +19,7 @@ function prepare_dir_out_files(array $config, array $keys) : array
 function prepare_dir_config_files(array $config) : array
 {
 	return prepare_dir_out_files($config,
-		bail_files_exist(['ca_cert_cnf_file', 'master_config_file'], $config) );
+		bail_files_exist(['ca_cert_cnf_file', 'ca_ext_file', 'master_config_file'], $config) );
 }
 
 function prepare_dir_ca_files(array $config) : array
@@ -34,6 +34,9 @@ function propose_config_file(array $config) : array
 		$config,
 		[
 			'master_config_file' => 'master.cnf',
+			'ca_ext_file' => sprintf('CA/%s-%s-CA.v3.ext',
+				get_current_user(),
+				gethostname() ),
 			'ca_cert_cnf_file' => sprintf('CA/%s-%s-CA.pem.cnf',
 				get_current_user(),
 				gethostname() ),
@@ -119,6 +122,15 @@ function prepare_ca_cert_cnf_file(array $config) : array
 #			.'DN=Local dev CA'
 #			.PHP_EOL
 		);
+
+	file_put_contents(
+		$config['ca_ext_file'], <<<EOS
+subjectKeyIdentifier = hash
+authorityKeyIdentifier = keyid:always,issuer
+basicConstraints = critical, CA:true
+keyUsage = critical, digitalSignature, cRLSign, keyCertSign
+EOS
+);
 
 	return $config;
 }
