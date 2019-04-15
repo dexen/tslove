@@ -6,10 +6,7 @@ ini_set('display_errors', true);
 
 require './libs.php';
 
-$config = [
-	'ca_key_file' => 'placeholder-CA.key',
-	'ca_cert_file' => 'placeholder-CA.pem',
-];
+$config = propose_ca_files();
 
 var_dump($config);
 
