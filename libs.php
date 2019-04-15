@@ -18,7 +18,8 @@ function prepare_dir_config_files(array $config, array $keys) : array
 
 function prepare_dir_ca_files(array $config) : array
 {
-	return prepare_dir_config_files($config, ['ca_key_file', 'ca_cert_file']);
+	return prepare_dir_config_files($config,
+		bail_files_exist(['ca_key_file', 'ca_cert_file'], $config) );
 }
 
 function propose_ca_files() : array
@@ -33,29 +34,31 @@ function propose_ca_files() : array
 	];
 }
 
-function bail_exists(string $pn) : string
+function bail_files_exist(array $a, array $config) : array
 {
-	if (file_exists($pn))
-		throw new RuntimeException(sprintf('Output file "%s" exists, refuses to overwrite', $pn));
-	return $pn;
+	foreach ($a as $k)
+		if (file_exists($config[$k]))
+			throw new RuntimeException(sprintf('Output file "%s" exists, refuses to overwrite', $config[$k]));
+	return $a;
 }
 
 function generate_ca_files(array $config)
 {
 	system(
 		sprintf('openssl genrsa -out %s 4096',
-			escapeshellcmd(bail_exists($config['ca_key_file'])) ) );
+			escapeshellcmd($config['ca_key_file']) ) );
 
 	system(
 		sprintf('openssl req -x509 -new -nodes -key %s -sha256 -days 1024 -out %s',
 			escapeshellcmd($config['ca_key_file']),
-			escapeshellcmd(bail_exists($config['ca_cert_file'])) ) );
+			escapeshellcmd($config['ca_cert_file']) ) );
 }
 
 
 function prepare_dir_cert_files(array $config) : array
 {
-	return prepare_dir_config_files($config, [ 'csr_file', 'conf_file', 'ext_file', 'cert_file', 'key_file' ]);
+	return prepare_dir_config_files($config,
+		bail_files_exist([ 'csr_file', 'conf_file', 'ext_file', 'cert_file', 'key_file' ], $config));
 }
 
 function propose_cert_files(array $config) : array
