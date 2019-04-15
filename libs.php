@@ -19,7 +19,7 @@ function prepare_dir_out_files(array $config, array $keys) : array
 function prepare_dir_config_files(array $config) : array
 {
 	return prepare_dir_out_files($config,
-		bail_files_exist(['ca_cert_config_file'], $config) );
+		bail_files_exist(['ca_cert_cnf_file', 'master_config_file'], $config) );
 }
 
 function prepare_dir_ca_files(array $config) : array
@@ -31,7 +31,8 @@ function prepare_dir_ca_files(array $config) : array
 function propose_config_file() : array
 {
 	return [
-		'ca_cert_config_file' => sprintf('CA/%s-%s-CA.pem.cnf',
+		'master_config_file' => 'master.cnf',
+		'ca_cert_cnf_file' => sprintf('CA/%s-%s-CA.pem.cnf',
 			get_current_user(),
 			gethostname() ),
 	];

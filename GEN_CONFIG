@@ -1,0 +1,48 @@
+#!/usr/bin/env php
+<?php
+
+ini_set('error_reporting', E_ALL);
+ini_set('display_errors', true);
+
+require './libs.php';
+
+$config = prepare_dir_config_files(propose_config_file());
+
+var_dump($config);
+
+$C = readline('Country Name (2 letter code) [AU]: ');
+$ST = readline('State or Province Name (full name) [Some-State]: ');
+$L = readline('Locality Name (eg, city) []: ');
+$O = readline('Organization Name (eg, company) [Internet Widgits Pty Ltd]: ');
+$OU = readline('Organizational Unit Name (eg, section) []: ');
+#$CN = readline('Common Name (e.g. server FQDN or YOUR name) []: ');
+$emailAddress = readline('Email Address []: ');
+
+
+$str = <<<EOS
+[req]
+default_bits = 4096
+prompt = no
+default_md = sha256
+distinguished_name = dn
+
+[dn]
+C=$C
+ST=$ST
+L=$L
+O=$O
+OU=$OU
+emailAddress=$emailAddress
+
+EOS;
+
+echo 'THE CONFIG: ', PHP_EOL;
+echo $str, PHP_EOL;
+
+$v = readline('Save? [y] ');
+if (($v === 'y') || ($v === '')) {
+	file_put_contents($config['master_config_file'], $str);
+	printf('Saved to "%s"' .PHP_EOL, $config['master_config_file']);
+	echo 'ALL DONE.', PHP_EOL; }
+else
+	echo 'Cancelled.';
