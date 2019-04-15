@@ -6,7 +6,7 @@ ini_set('display_errors', true);
 
 require './libs.php';
 
-$config = propose_ca_files();
+$config = prepare_dir_ca_files(propose_ca_files());
 
 var_dump($config);
 

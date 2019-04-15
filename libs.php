@@ -7,13 +7,26 @@ function td(...$a)
 	die('td()');
 }
 
+function prepare_dir_ca_files(array $config) : array
+{
+	$pn = dirname($config['ca_key_file']);
+	if (!is_dir($pn))
+		mkdir($pn, 0777, $recursive = true);
+
+	$pn = dirname($config['ca_cert_file']);
+	if (!is_dir($pn))
+		mkdir($pn, 0777, $recursive = true);
+
+	return $config;
+}
+
 function propose_ca_files() : array
 {
 	return [
-		'ca_key_file' => sprintf('%s-%s-CA.key',
+		'ca_key_file' => sprintf('CA/%s-%s-CA.key',
 			get_current_user(),
 			gethostname() ),
-		'ca_cert_file' => sprintf('%s-%s-CA.pem',
+		'ca_cert_file' => sprintf('CA/%s-%s-CA.pem',
 			get_current_user(),
 			gethostname() ),
 	];
