@@ -6,9 +6,12 @@ ini_set('display_errors', true);
 
 require './libs.php';
 
-$config = prepare_dir_ca_files(propose_ca_files());
+$config = prepare_dir_ca_files(propose_ca_files(propose_config_file()));
 
 var_dump($config);
+
+if (!file_exists($config['ca_cert_config_file']))
+	throw new RuntimeException(sprintf('Config file "%s" does not exist, run GEN_CONFIG', $config['ca_cert_config_file']));
 
 $v = readline('Generate? [y] ');
 if (($v === 'y') || ($v === '')) {
