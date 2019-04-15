@@ -6,11 +6,7 @@ ini_set('display_errors', true);
 
 require './libs.php';
 
-$config = [
-	'ca_cert_file' => 'placeholder.pem',
-	'domain' => 'example.local',
-	'key_file' => 'example.local.key',
-];
+$config = prepare_dir_cert_files(propose_cert_files(prompt_domain()));
 
 $v = readline(sprintf('Generate for "%s"? [y] ', $config['domain']));
 if (($v === 'y') || ($v === '')) {

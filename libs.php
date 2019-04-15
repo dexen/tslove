@@ -51,3 +51,30 @@ function generate_ca_files(array $config)
 			escapeshellcmd($config['ca_key_file']),
 			escapeshellcmd(bail_exists($config['ca_cert_file'])) ) );
 }
+
+
+function prepare_dir_cert_files(array $config) : array
+{
+	return prepare_dir_config_files($config, [ 'key_file', 'cert_file' ]);
+}
+
+function propose_cert_files(array $config) : array
+{
+	$config = array_merge($config, propose_ca_files());
+
+	$config['cert_file'] = 'domains/' .$config['domain'] .'.pem';
+	$config['key_file'] = 'domains/' .$config['domain'] .'.key';
+
+	return $config;
+}
+
+function prompt_domain() : array
+{
+	$like = 'example.' .gethostname();
+
+	$config = [
+		'domain' => readline(sprintf('Local dev domain name (like "%s") ', $like)),
+	];
+
+	return $config;
+}
