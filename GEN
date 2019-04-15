@@ -4,6 +4,10 @@
 ini_set('error_reporting', E_ALL);
 ini_set('display_errors', true);
 
-
+$data = [
+	'ca_cert_file' =>
+	'domain' => 'example.local',
+	'key_file' => 'example.local.key',
+];
 
 echo 'ALL DONE.', PHP_EOL;
