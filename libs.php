@@ -7,17 +7,18 @@ function td(...$a)
 	die('td()');
 }
 
-function prepare_dir_ca_files(array $config) : array
+function prepare_dir_config_files(array $config, array $keys) : array
 {
-	$pn = dirname($config['ca_key_file']);
-	if (!is_dir($pn))
-		mkdir($pn, 0777, $recursive = true);
-
-	$pn = dirname($config['ca_cert_file']);
-	if (!is_dir($pn))
-		mkdir($pn, 0777, $recursive = true);
+	foreach ($keys as $k)
+		if (!is_dir(dirname($config[$k])))
+			mkdir(dirname($config[$k]), 0777, $recursive = true);
 
 	return $config;
+}
+
+function prepare_dir_ca_files(array $config) : array
+{
+	return prepare_dir_config_files($config, ['ca_key_file', 'ca_cert_file']);
 }
 
 function propose_ca_files() : array
