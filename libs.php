@@ -7,7 +7,7 @@ function td(...$a)
 	die('td()');
 }
 
-function prepare_dir_config_files(array $config, array $keys) : array
+function prepare_dir_out_files(array $config, array $keys) : array
 {
 	foreach ($keys as $k)
 		if (!is_dir(dirname($config[$k])))
@@ -18,11 +18,11 @@ function prepare_dir_config_files(array $config, array $keys) : array
 
 function prepare_dir_ca_files(array $config) : array
 {
-	return prepare_dir_config_files($config,
+	return prepare_dir_out_files($config,
 		bail_files_exist(['ca_key_file', 'ca_cert_file'], $config) );
 }
 
-function propose_ca_files() : array
+function propose_config_file() : array
 {
 	return [
 		'ca_key_file' => sprintf('CA/%s-%s-CA.key',
@@ -57,7 +57,7 @@ function generate_ca_files(array $config)
 
 function prepare_dir_cert_files(array $config) : array
 {
-	return prepare_dir_config_files($config,
+	return prepare_dir_out_files($config,
 		bail_files_exist([ 'csr_file', 'conf_file', 'ext_file', 'cert_file', 'key_file' ], $config));
 }
 
