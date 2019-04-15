@@ -55,15 +55,21 @@ function generate_ca_files(array $config)
 
 function prepare_dir_cert_files(array $config) : array
 {
-	return prepare_dir_config_files($config, [ 'key_file', 'cert_file' ]);
+	return prepare_dir_config_files($config, [ 'csr_file', 'conf_file', 'ext_file', 'cert_file', 'key_file' ]);
 }
 
 function propose_cert_files(array $config) : array
 {
-	$config = array_merge($config, propose_ca_files());
-
-	$config['cert_file'] = 'domains/' .$config['domain'] .'.pem';
-	$config['key_file'] = 'domains/' .$config['domain'] .'.key';
+	$config = array_merge(
+		$config,
+		propose_ca_files(),
+		[
+			'csr_file' => 'domains/' .$config['domain'] .'.csr',
+			'conf_file' => 'domains/' .$config['domain'] .'.csr.cnf',
+			'ext_file' => 'domains/' .$config['domain'] .'.v3.ext',
+			'cert_file' => 'domains/' .$config['domain'] .'.pem',
+			'key_file' => 'domains/' .$config['domain'] .'.key',
+		] );
 
 	return $config;
 }
