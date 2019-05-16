@@ -134,7 +134,7 @@ cert/domains.conf:Q: domains.list
 			print "DNS." n " = www." $0
 		} ' < $prereq > $target
 
-domains.list:VQ: skeleton-domains.list
+domains.list:Q: skeleton-domains.list
 	if (9 grep '^#example.com' domains.list > /dev/null) {
 		echo Please fill in the domains.list file
 		exit 1}
