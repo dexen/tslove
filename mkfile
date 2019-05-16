@@ -4,6 +4,11 @@ caStem = `{printf %s-%s-CA `{whoami} `{hostname}}
 
 all:VQ: installed-ca installed-server-cert
 	echo ALL DONE.
+	echo Please remember to restart the HTTP server, for example, as root:
+	echo '	'apachectl restart
+	echo Please remember to update CA certificates, for exampl, as root:
+	echo '	'update-ca-certificates
+	echo Please remember to add the certificate as ''trusted'' to your browser.
 
 installed-ca:VQ: /usr/local/share/ca-certificates/$caStem.crt
 
