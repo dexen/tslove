@@ -6,7 +6,7 @@ ini_set('display_errors', true);
 
 require './libs.php';
 
-$config = prepare_dir_config_files(propose_config_file());
+$config = prepare_dir_config_files(propose_config_file([]));
 
 var_dump($config);
 
